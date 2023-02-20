@@ -45,7 +45,7 @@ y_data: list[list[float]] = [
 values: dict
 
 while True:
-    event, values = window.read(timeout=1000 / 3)
+    event, values = window.read(timeout=1000 / 2)
 
     if event in (sg.WIN_CLOSED,):
         break
@@ -59,10 +59,13 @@ while True:
                 else 'yellow' if cpu_percent < 66
                 else 'red')
 
+        if len(y_data[i]) > 200:
+            y_data[i].pop(0)
+
         y_data[i].append(cpu_percent)
 
         plot(graph, [i for i in range(len(y_data[i]))], y_data[i], color=colors[i])
 
-        window[f'-CPU-{i}-USAGE-'].update(cpu_percent, bar_color=(colors[i], color))
+        window[f'-CPU-{i}-USAGE-'].update(cpu_percent, bar_color=(colors[i], None))
         
 window.close()
